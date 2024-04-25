@@ -1,0 +1,50 @@
+services:
+  postgres:
+    container_name: postgres.postgres
+    image: "postgres:15-alpine"
+    hostname: postgres.postgres
+    restart: unless-stopped
+    expose:
+      - "5432"
+    ports:
+      - "127.0.0.1:15432:5432"
+    networks:
+      - postgres.postgres.network
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres.postgres.data:/var/lib/postgresql/data:rw
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 10s
+
+  pg_admin:
+    container_name: postgres.pg_admin
+    image: dpage/pgadmin4
+    hostname: postgres.pg_admin
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - postgres.postgres.network
+    volumes:
+      - postgres.pg_admin.data:/var/lib/pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+
+volumes:
+  postgres.postgres.data: {}
+  postgres.pg_admin.data: {}
+
+networks:
+  postgres.postgres.network: {}
