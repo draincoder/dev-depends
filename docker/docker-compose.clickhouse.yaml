@@ -9,6 +9,7 @@ services:
       - "9000"
     ports:
       - "127.0.0.1:18123:8123"
+      - "127.0.0.1:19000:9000"
     environment:
       - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=${CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT:-1}
       - CLICKHOUSE_DB=${CLICKHOUSE_DB:-default}
