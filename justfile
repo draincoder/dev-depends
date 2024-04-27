@@ -26,3 +26,11 @@
 # Stop brokers (Kafka, Rabbit, Redis, Nats) for test in docker containers
 @stop-brokers:
 	docker compose -f docker/docker-compose.brokers.yaml down
+
+# Run rabbit in docker container
+@run-rabbit:
+	docker compose -f docker/docker-compose.rabbit.yaml up -d
+
+# Stop rabbit in docker container
+@stop-rabbit:
+	docker compose -f docker/docker-compose.rabbit.yaml down

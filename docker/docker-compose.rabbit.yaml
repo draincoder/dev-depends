@@ -1,0 +1,31 @@
+services:
+  rabbit:
+    image: rabbitmq:3.11-management-alpine
+    container_name: rabbit.rabbitmq
+    hostname: rabbit.rabbitmq
+    restart: unless-stopped
+    expose:
+      - "5672"
+      - "15672"
+    ports:
+      - "127.0.0.1:5671:5672"
+      - "127.0.0.1:15672:15672"
+    networks:
+      - rabbitmq.rabbitmq.network
+    volumes:
+      - rabbitmq.rabbitmq.data:/var/lib/rabbitmq/:rw
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-admin}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD:-admin}
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics check_running -q"]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  rabbitmq.rabbitmq.data: {}
+
+networks:
+  rabbitmq.rabbitmq.network: {}
