@@ -1,8 +1,8 @@
 services:
   redis:
     image: redis:alpine
-    container_name: brokers.redis
-    hostname: brokers.redis
+    container_name: redis.redis
+    hostname: redis.redis
     restart: unless-stopped
     ports:
       - "6379:6379"
