@@ -34,3 +34,11 @@
 # Stop rabbit in docker container
 @stop-rabbit:
 	docker compose -f docker/docker-compose.rabbit.yaml down
+
+# Run redis in docker container
+@run-redis:
+	docker compose -f docker/docker-compose.redis.yaml up -d
+
+# Stop redis in docker container
+@stop-redis:
+	docker compose -f docker/docker-compose.redis.yaml down
