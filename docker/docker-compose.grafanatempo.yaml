@@ -1,0 +1,45 @@
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: infra.grafana
+    hostname: infra.grafana
+    restart: unless-stopped
+    expose:
+      - "3000"
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks:
+      - infra.grafana.network
+    volumes:
+      - infra.grafana.data:/var/lib/grafana:rw
+      - ./grafana/provisioning:/etc/grafana/provisioning:rw
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_DATABASE_WAL=true
+      - VIRTUAL_HOST=infra.grafana
+      - NETWORK_ACCESS=internal
+      - VIRTUAL_PORT=3000
+
+  tempo:
+    image: grafana/tempo:2.0.1
+    container_name: infra.tempo
+    hostname: infra.tempo
+    command: [ "--target=all", "--storage.trace.backend=local", "--storage.trace.local.path=/var/tempo", "--auth.enabled=false" ]
+    restart: unless-stopped
+    ports:
+      - "14250:14250"
+      - "4317:4317"
+    expose:
+      - "14250"
+      - "4317"
+    networks:
+      - infra.grafana.network
+
+volumes:
+  infra.grafana.data: {}
+
+
+networks:
+  infra.grafana.network: {}

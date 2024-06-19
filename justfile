@@ -42,3 +42,11 @@
 # Stop redis in docker container
 @stop-redis:
 	docker compose -f docker/docker-compose.redis.yaml down
+
+# Run Grafana & Tempo in docker container
+@run-grafanatempo:
+	docker compose -f docker/docker-compose.grafanatempo.yaml up -d
+
+# Stop Grafana & Tempo in docker container
+@stop-grafanatempo:
+	docker compose -f docker/docker-compose.grafanatempo.yaml down
